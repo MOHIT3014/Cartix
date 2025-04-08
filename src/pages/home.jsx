@@ -49,6 +49,9 @@ function Home() {
                                 title={product.title} S
                                 price={product.price}
                                 rating={product.rating}
+                                desc={product.description}
+                                stock={product.stock}
+                                warranty={product.warrantyInformation}
                                 onAddToCart={() => addToCart(product.id)} />
 
                         </>
