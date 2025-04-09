@@ -9,9 +9,16 @@ function ProductCard({ pid, img, category, title, price, rating, desc, stock, wa
     const modalRef = useRef();
 
     const handleCart = () => {
-        addToCart(pid, 1);
-        alert(`${title} has been added to cart!`);
+        const user = sessionStorage.getItem("user");
+
+        if (user) {
+            addToCart(pid, 1);
+            alert(`${title} has been added to cart!`);
+        } else {
+            alert("Please login to add items to your cart.");
+        }
     };
+
 
     return (
         <>
@@ -71,7 +78,7 @@ function ProductCard({ pid, img, category, title, price, rating, desc, stock, wa
                 >
                     <div className="modal-content" style={{ height: "100%" }}>
                         <div className="modal-header">
-                            
+
                             <button
                                 type="button"
                                 className="btn-close"
@@ -88,13 +95,13 @@ function ProductCard({ pid, img, category, title, price, rating, desc, stock, wa
                                 <img src={img} className="m-auto" alt={title} width={400} height={400} />
                             </div>
                             <div className="text-start" style={{ Width: "50%", height: "450px" }}>
-                            <p className="fs-5 text-capitalize text-black  "><strong></strong> {category}</p>
-                            <h2 className="fs-1 fw-bold">{title}</h2>
-                            <p className="fs-3 fw-bold text-black text-decoration-underline"><strong className="fs-5 text-black fw-300">Price:</strong> ${price}</p>
-                            <p className="fs-4 text-black"><strong className="fs-5 text-black">Description:</strong> {desc}</p>
-                            <p className="fs-3 text-black"><strong className="fs-5 text-black">Rating:</strong> ⭐ {rating}</p>
-                            <p className="fs-3 text-black"><strong className="fs-5 text-black">Stock:</strong> {stock}</p>
-                            <p className="fs-3 text-black"><strong className="fs-5 text-black">Warranty:</strong> {warranty}</p>
+                                <p className="fs-5 text-capitalize text-black  "><strong></strong> {category}</p>
+                                <h2 className="fs-1 fw-bold">{title}</h2>
+                                <p className="fs-3 fw-bold text-black text-decoration-underline"><strong className="fs-5 text-black fw-300">Price:</strong> ${price}</p>
+                                <p className="fs-4 text-black"><strong className="fs-5 text-black">Description:</strong> {desc}</p>
+                                <p className="fs-3 text-black"><strong className="fs-5 text-black">Rating:</strong> ⭐ {rating}</p>
+                                <p className="fs-3 text-black"><strong className="fs-5 text-black">Stock:</strong> {stock}</p>
+                                <p className="fs-3 text-black"><strong className="fs-5 text-black">Warranty:</strong> {warranty}</p>
                             </div>
                         </div>
 

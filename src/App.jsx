@@ -10,10 +10,13 @@ import { useEffect, useState } from 'react';
 import CartPage from './pages/cart';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { CartProvider, useCart } from './context/cardContext';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 function App() {
     const [userData, setUserData] = useState(null);
+    // const {fetchUserCart,clearCart} = useCart();
     
 
     useEffect(() => {
@@ -33,6 +36,7 @@ function App() {
         .then(res => res.json())
         .then(userData => {
             setUserData(userData);
+        
             
         })
         .catch(err => {
@@ -44,6 +48,7 @@ function App() {
         sessionStorage.removeItem('user');
         sessionStorage.removeItem('token');
         setUserData(null);
+        
     }
 
     return (
@@ -51,6 +56,7 @@ function App() {
             <BrowserRouter>
                 <CartProvider userData = {userData}>
                     <Navbar userData={userData} onLogout={handleLogout} />
+                    
                     <Routes>
                         <Route path="/" element={<Home userData={userData} />} />
                         <Route path="/Signup" element={<Signup />} />

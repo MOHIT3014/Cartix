@@ -43,22 +43,18 @@ export const CartProvider = ({ children }) => {
         try {
             const user = JSON.parse(sessionStorage.getItem('user'));
             if (!user || !user.id) {
-                console.error("User  not logged in or userId missing");
+                console.error("User not logged in or userId missing");
                 return;
             }
 
+            // Send to API with quantity 1 only (as per click)
             const res = await fetch('https://dummyjson.com/carts/add', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     userId: user.id,
-                    products: [
-                        {
-                            id: pid,
-                            quantity: quantity
-                        }
-                    ]
-                })
+                    products: [{ id: pid, quantity: 1 }],
+                }),
             });
 
             const data = await res.json();
@@ -68,13 +64,18 @@ export const CartProvider = ({ children }) => {
                 setCart(prevCart => {
                     const updatedCart = prevCart ? { ...prevCart } : { products: [] };
                     const existingProductIndex = updatedCart.products.findIndex(item => item.id === pid);
+
                     if (existingProductIndex > -1) {
-                        updatedCart.products[existingProductIndex].quantity += quantity;
+                        // ✅ Increment quantity by 1
+                        updatedCart.products[existingProductIndex].quantity += 1;
                     } else {
-                        updatedCart.products.push({ id: pid, quantity });
+                        // ✅ Add new item with quantity 1
+                        updatedCart.products.push({ id: pid, quantity: 1 });
                     }
+
                     return updatedCart;
                 });
+
                 console.log("Cart updated:", data);
             }
         } catch (error) {
@@ -82,13 +83,16 @@ export const CartProvider = ({ children }) => {
         }
     };
 
+
     const clearCart = () => {
         setCart({ products: [] });
-        localStorage.removeItem('cart'); 
+        localStorage.removeItem('cart');
     };
 
+
+
     return (
-        <CartContext.Provider value={{ cart, addToCart, clearCart, fetchUserCart }}>
+        <CartContext.Provider value={{ setCart, cart, addToCart, clearCart, fetchUserCart }}>
             {children}
         </CartContext.Provider>
     );

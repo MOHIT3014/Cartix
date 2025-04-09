@@ -62,7 +62,7 @@ function Navbar({ userData, onLogout }) {
                                     <i className="fa-solid fa-user text-secondary fs-4"></i>
                                 </Link>
                                 <Link className="nav-link fs-5 text-uppercase" to="/login">
-                                    {userData?.firstName || "Login"}
+                                    {userData && userData.firstName }
                                 </Link>
                             </div>
                             <div className="user p-2 border rounded-pill border-dark d-flex justify-content-center align-items-center gap-2"
