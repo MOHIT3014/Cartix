@@ -3,10 +3,11 @@ import './layout.css';
 import { useCart } from "../context/cardContext";
 
 function Navbar({ userData, onLogout }) {
-    const { cart } = useCart();
+    const { counter } = useCart();
+
 
     // Fallback to empty cart if undefined/null
-    const cartCount = cart?.products?.reduce((total, item) => total + item.quantity, 0) || 0;
+   
 
     return (
         <>
@@ -72,7 +73,7 @@ function Navbar({ userData, onLogout }) {
                             <div className="cart p-2 border rounded-pill border-dark position-relative">
                                 <Link className="nav-link" to="/cart">
                                     <i className="fa-solid fa-cart-shopping text-secondary fs-4"></i>
-                                    <span className="badge bg-danger counter">{cartCount}</span>
+                                    <span className="badge bg-danger counter">{counter}</span>
                                 </Link>
                             </div>
                             <div className="cart p-2 border rounded-pill border-dark">

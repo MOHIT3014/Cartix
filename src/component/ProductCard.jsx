@@ -2,22 +2,17 @@ import { useRef } from "react";
 import { Link } from "react-router-dom";
 import './ProductCard.css';
 import { useCart } from "../context/cardContext";
+import { useState } from "react";
 
 function ProductCard({ pid, img, category, title, price, rating, desc, stock, warranty }) {
     const { addToCart } = useCart();
+    const [qyt, setQyt] = useState(1)
 
     const modalRef = useRef();
 
-    const handleCart = () => {
-        const user = sessionStorage.getItem("user");
+    
 
-        if (user) {
-            addToCart(pid, 1);
-            alert(`${title} has been added to cart!`);
-        } else {
-            alert("Please login to add items to your cart.");
-        }
-    };
+
 
 
     return (
@@ -38,20 +33,33 @@ function ProductCard({ pid, img, category, title, price, rating, desc, stock, wa
                         </div>
                     </div>
                     <div className="card border-0">
-                        <button onClick={handleCart}>
-                            <div className="card-link text-dark p-3 bg-dark text-white text-decoration-none cartSection">
-                                <i className="fa-solid fa-cart-shopping fs-6"> Add to cart</i>
+                        <button>
+                            <div className="card-link text-dark p-3 bg-dark d-flex text-white text-decoration-none cartSection">
+                                <div className="quantity d-flex">
+                                    <button className="btn btn-danger rounded fw-bold " onClick={() => { setQyt(qyt + 1) }}>
+                                        -
+                                    </button>
+                                    <div className="col-xl-3">
+                                        <input className="w-100 form-control qyt text-center" type="text" value={qyt} min={1} name="qyt" />
+                                    </div>
+                                    <button className="btn btn-success rounded fw-bold " onClick={() => { setQyt(qyt + 1) }}>
+                                        +
+                                    </button>
+
+                                </div>
+                                <button className="btn btn-primary" onClick={() => addToCart(pid, qyt)}><i className="fa-solid fa-cart-shopping "> Add to cart</i></button>
                             </div>
                         </button>
                     </div>
                 </div>
-                <div className="card-body p-5 gap-2">
+                <div className="card-body p-2 gap-2 content">
                     <h5 className="card-title text-uppercase fs-6 p-2 rounded-pill text-center fw-bold bg-secondary text-white">{category}</h5>
                     <h3 className="card-title fs-4 fw-bold">{title}</h3>
                     <p className="card-title fw-bolder fs-4">$ {price}</p>
                     <div className="card-body d-flex justify-content-between align-items-center p-0 position-relative overflow-hidden">
+
                         <i className="fa-solid fa-star full fs-6"> {rating} </i>
-                        <div className="viewDetails">
+                        {/* <div className="viewDetails">
                             <button
                                 className="text-secondary text-decoration-none p-3 bg-transparent border-0"
                                 data-bs-toggle="modal"
@@ -59,7 +67,7 @@ function ProductCard({ pid, img, category, title, price, rating, desc, stock, wa
                             >
                                 View Details
                             </button>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>
@@ -113,7 +121,7 @@ function ProductCard({ pid, img, category, title, price, rating, desc, stock, wa
                             >
                                 Close
                             </button>
-                            <button type="button" className="btn btn-primary" onClick={handleCart}>
+                            <button type="button" className="btn btn-primary"onClick={() => addToCart(pid, qyt)}>
                                 Add to Cart
                             </button>
                         </div>
