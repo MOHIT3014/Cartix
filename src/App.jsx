@@ -12,6 +12,7 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { CartProvider, useCart } from './context/cardContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ProfileTabs from './pages/Profile';
 
 
 function App() {
@@ -21,7 +22,8 @@ function App() {
 
     useEffect(() => {
         if (sessionStorage.getItem('user')) {
-            setUserData(JSON.parse(sessionStorage.getItem('user')));
+            let uData = JSON.parse(sessionStorage.getItem('user'))
+            loginData(uData.accessToken)
         }
     }, []);
 
@@ -61,7 +63,9 @@ function App() {
                         <Route path="/" element={<Home userData={userData} />} />
                         <Route path="/Signup" element={<Signup />} />
                         <Route path="/login" element={<Login loginData={loginData} />} />
-                        <Route path="/cart" element={<CartPage />} />
+                        <Route path="/cart" element={<CartPage userData = {userData}/>} />
+                        <Route path="/profile" element={<ProfileTabs userData={userData}/>} />
+
                     </Routes>
                 </CartProvider>
             </BrowserRouter>

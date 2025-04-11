@@ -36,7 +36,7 @@ function ProductCard({ pid, img, category, title, price, rating, desc, stock, wa
                         <button>
                             <div className="card-link text-dark p-3 bg-dark d-flex text-white text-decoration-none cartSection">
                                 <div className="quantity d-flex">
-                                    <button className="btn btn-danger rounded fw-bold " onClick={() => { setQyt(qyt + 1) }}>
+                                    <button className="btn btn-danger rounded fw-bold " onClick={() => { setQyt(qyt - 1) }}>
                                         -
                                     </button>
                                     <div className="col-xl-3">

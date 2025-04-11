@@ -1,39 +1,40 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { toast } from "react-toastify";
+import OrderModal from '../modals/orderModal'
 
 const CartContext = createContext();
 
-export const CartProvider = ({ children }) => {
+export const CartProvider = ({ children, userData }) => {
     const [cart, setCart] = useState(null);
     const [counter, setCounter] = useState(0);
     const [user, setUser] = useState(null);
 
-    
+
     useEffect(() => {
         const savedCart = JSON.parse(localStorage.getItem('cart'));
         const savedUser = JSON.parse(sessionStorage.getItem('user'));
-    
+
         if (savedCart) {
             setCart(savedCart);
-            setCounter(savedCart.products?.length || 0); 
+            setCounter(savedCart.products?.length || 0);
         } else {
             setCart({ products: [] });
-            setCounter(0); 
+            setCounter(0);
         }
-    
+
         if (savedUser) {
             setUser(savedUser);
         }
     }, []);
 
-    
+
     useEffect(() => {
         if (cart !== null) {
             localStorage.setItem('cart', JSON.stringify(cart));
         }
     }, [cart]);
 
-    
+
     const fetchUserCart = async () => {
         const userFromSession = JSON.parse(sessionStorage.getItem("user"));
         if (!userFromSession || !userFromSession.id) return;
@@ -53,7 +54,7 @@ export const CartProvider = ({ children }) => {
         }
     };
 
-    
+
     const addToCart = async (pid, quantity) => {
         let currentUser = user;
 
@@ -90,7 +91,7 @@ export const CartProvider = ({ children }) => {
                 let updatedProducts;
 
                 if (existingIndex !== -1) {
-                    
+
                     updatedProducts = cart.products.map((p, index) =>
                         index === existingIndex
                             ? {
@@ -101,12 +102,12 @@ export const CartProvider = ({ children }) => {
                             : p
                     );
                 } else {
-                    
+
                     updatedProducts = [...cart.products, newProduct];
                 }
 
                 setCart({ ...cart, products: updatedProducts });
-                setCounter(prev => prev + 1); 
+                setCounter(prev => prev + 1);
                 toast.success("Product added to cart!");
             }
         } catch (err) {
@@ -115,27 +116,55 @@ export const CartProvider = ({ children }) => {
         }
     };
 
-    
+
     const removeFromCart = (pid) => {
         if (!cart || !cart.products) return;
-    
+
         const productToRemove = cart.products.find(p => p.id === pid);
         if (!productToRemove) return;
-    
-       
+
+        // Filter out the removed product
         const updatedProducts = cart.products.filter(product => product.id !== pid);
-    
-        setCounter(prev => Math.max(0, prev - productToRemove.quantity));
-    
+
+        // Reduce counter by quantity of the removed product
+        setCounter(prev => Math.max(0, prev - 1));
+
         setCart({ ...cart, products: updatedProducts });
         toast.info("Product removed from cart");
     };
-    
 
-    const clearCart = () => {
+
+    function handleCheckOut() {
+        if (!cart || cart.products.length === 0) {
+            toast.warning("Oops! Your cart is empty. Add some goodies first.");
+            return;
+        }
+
+        const order = {
+            userID: userData.id,
+            orderNumber: Math.floor(100000 + Math.random() * 900000),
+            orderDate: new Date(),
+            orderTotal: cart.products.reduce((sum, item) => sum + item.total, 0),
+            items: cart.products,
+            status: "pending"
+        };
+        const existingOrders = JSON.parse(localStorage.getItem("orders")) || [];
+
+        
+        const updatedOrders = [...existingOrders, order];
+
+        
+        localStorage.setItem("orders", JSON.stringify(updatedOrders));
+
+        alert("🎉 Thank you for your purchase!\n\nYour order has been placed successfully and is being processed.\nWe'll keep you updated. Happy shopping! 🛒");
+
         setCart({ products: [] });
         localStorage.removeItem('cart');
-    };
+        setCounter(0);
+    }
+
+
+
 
     return (
         <CartContext.Provider
@@ -143,10 +172,10 @@ export const CartProvider = ({ children }) => {
                 setCart,
                 cart,
                 addToCart,
-                clearCart,
                 fetchUserCart,
                 removeFromCart,
                 counter,
+                handleCheckOut
             }}
         >
             {children}

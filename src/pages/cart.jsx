@@ -1,7 +1,8 @@
 import { useCart } from "../context/cardContext";
 
 function CartPage() {
-    const { cart,removeFromCart } = useCart();
+    const { cart,removeFromCart,handleCheckOut } = useCart();
+    
 
     if (!cart || !cart.products || cart.products.length === 0) {
         return (
@@ -18,12 +19,25 @@ function CartPage() {
         cartTotal += product.total;
     });
 
+    // function handleCheckOut(){
+    //     const order = {
+    //         userID : userData.id, 
+    //         orderNumber :Math.floor(100000 + Math.random() * 900000),
+    //         orderDate : new Date(),
+    //         orderTotal : cartTotal,
+    //         items : cart,
+    //         status :"pending"
+
+    //     }
+    //     console.log(order)
+    // }
+
     return (
         <>
             <div className="container">
                 <h1 className="text-center">Cart</h1>
-                <div className="col-xl-7 m-auto p-5">
-                    <table className="table">
+                <div className="col-xl-10 m-auto p-5">
+                    <table className="table table-striped">
                         <thead>
                             <tr>
                                 <th>Product Image</th>
@@ -41,13 +55,16 @@ function CartPage() {
                                     <td>{product.title}</td>
                                     <td>{product.total}</td>
                                     <td>{product.quantity}</td>
-                                    <td><button onClick={() => removeFromCart(product.id)}>Delete</button></td>
+                                    <td><button className="btn btn-danger" onClick={() => removeFromCart(product.id)}><i className="fa fa-trash"></i></button></td>
                                 </tr>
                             ))}
                             <tr>
                                 <td colSpan="2"></td>
                                 <td className="text-end fw-bold">Total:</td>
                                 <td className="fw-bold">{cartTotal}</td>
+                                <div className="btn btn-primary rounded text-light fw-bold bg-primary" onClick={handleCheckOut}>
+                                checkout
+                                </div>
                             </tr>
                         </tbody>
                     </table>

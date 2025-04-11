@@ -56,6 +56,9 @@ function Navbar({ userData, onLogout }) {
                             <li className="nav-item">
                                 <Link className="nav-link fs-5" to="#">Contact</Link>
                             </li>
+                            <li className="nav-item">
+                                <Link className="nav-link fs-5" to="/profile">Profile</Link>
+                            </li>
                         </ul>
                         <div className="d-flex ms-3 gap-3">
                             <div className="user p-2 border rounded-pill border-dark d-flex justify-content-center align-items-center gap-2">
